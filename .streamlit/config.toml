@@ -1,0 +1,11 @@
+[theme]
+# Paleta oficial EnerMais — mesma do RADAR, pra manter os apps consistentes.
+primaryColor = "#F99D20"              # laranja EnerMais — botões, sliders, destaques
+backgroundColor = "#0F1340"           # navy escuro — fundo principal
+secondaryBackgroundColor = "#1D2470"  # navy um tom mais claro — tabelas, inputs, cards
+textColor = "#F5F6FA"                 # quase-branco — texto principal
+font = "sans serif"
+
+# IMPORTANTE: mudanças neste arquivo só aparecem depois de um restart completo
+# (Ctrl+C e rodar "streamlit run" de novo) — o auto-reload ao salvar o .py não
+# recarrega o tema.

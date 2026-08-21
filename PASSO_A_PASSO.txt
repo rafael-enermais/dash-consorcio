@@ -1,0 +1,60 @@
+PAINEL DE USINAS — deploy (mesmo padrão do RHDADOS/RADAR)
+
+O que é: Streamlit com login real via Supabase Auth (e-mail/senha), tema
+EnerMais, mostra capacidade/comprometido/disponível por usina e por
+concessionária. Zero PII — mesma view vw_dashboard_usinas_publico que o
+painel HTML público usava, só que agora atrás de login.
+
+PASSO 0 — Revogar o acesso público (importante, antes de publicar)
+O painel HTML anterior deixou a view liberada pro anon (qualquer um com o
+link). Agora que vamos atrás de login, revoga isso: Supabase → projeto
+"consorcio-enermais" → SQL Editor → cole e rode:
+
+  REVOKE SELECT ON public.vw_dashboard_usinas_publico FROM anon;
+
+(Não precisa revogar de "authenticated" — é exatamente o que o app novo
+usa depois do login.)
+
+PASSO 1 — Criar seu usuário de login (se ainda não tiver nesse projeto)
+Supabase → projeto "consorcio-enermais" → "Authentication" → "Users" →
+"Add user" → seu e-mail + uma senha → "Create user".
+(Um usuário por pessoa que for acessar — mesmo padrão do RHDADOS.)
+
+PASSO 2 — Criar o repositório no GitHub
+github.com → Organization rafael-enermais → New repository → nome
+"painel-usinas" (ou o que preferir) → Private → Create repository (sem
+README).
+
+PASSO 3 — Subir os arquivos (terminal, dentro da pasta descompactada)
+cd caminho\da\pasta\painel_usinas_app
+git init
+git add .
+git commit -m "Painel de usinas: primeira versão"
+git branch -M main
+git remote add origin https://github.com/rafael-enermais/painel-usinas.git
+git push -u origin main
+
+PASSO 4 — Conectar no Streamlit Community Cloud
+share.streamlit.io → login com a mesma conta GitHub → "New app" →
+repositório "painel-usinas" → branch main → arquivo principal
+"app_painel_usinas.py" → antes de "Deploy", clica em "Advanced settings" →
+em "Secrets" cola:
+
+  SUPABASE_URL = "https://alrcuteehmdwztdcjyoz.supabase.co"
+  SUPABASE_ANON_KEY = "sua_anon_key_do_projeto_consorcio-enermais_aqui"
+
+(a anon key está em Supabase → Settings → API Keys → aba "Legacy anon,
+service_role API keys" → "anon public" — NUNCA a service_role) → Deploy.
+
+PASSO 5 — Testar
+Abre a URL que o Streamlit gerar → deve pedir e-mail/senha → loga com o
+usuário do Passo 1 → deve mostrar o painel com os cards por concessionária
+e a tabela por usina.
+
+Pra rodar local antes de subir (opcional, mais rápido pra testar):
+cd painel_usinas_app
+copy .env.example .env    (edita com seus valores reais)
+pip install -r requirements.txt
+streamlit run app_painel_usinas.py
+
+Se der erro em qualquer passo, me manda a mensagem exata.
